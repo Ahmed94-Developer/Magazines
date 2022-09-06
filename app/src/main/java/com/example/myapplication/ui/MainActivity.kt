@@ -25,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+    val recyclerView : RecyclerView
+    get() = findViewById(R.id.rv)
+
     @Inject
     lateinit var postsViewModelFactory: PostsViewModelFactory
     private lateinit var postsViewModel: PostsViewModel
@@ -32,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val recyclerView = findViewById<RecyclerView>(R.id.rv)
+
         (application as PostsApplication).applicationComponent.inject(this)
         postsViewModel = ViewModelProvider(this,postsViewModelFactory).get(PostsViewModel::class.java)
 
