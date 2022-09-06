@@ -1,47 +1,35 @@
 package com.example.myapplication.ui
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.R
-import com.example.myapplication.application.PostsApplication
-import com.example.myapplication.data.adapters.PostsAdapter
-import com.example.myapplication.databinding.ActivityMainBinding
-import com.example.myapplication.viewmodel.PostsViewModel
+import com.example.myapplication.data.adapters.PagerAdapter
 import com.example.myapplication.viewmodel.PostsViewModelFactory
+import com.google.android.gms.dynamic.SupportFragmentWrapper
+import com.google.android.material.tabs.TabLayout
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
-    @Inject
-    lateinit var postsViewModelFactory: PostsViewModelFactory
-    private lateinit var postsViewModel: PostsViewModel
+    val viewPager: ViewPager
+    get() = findViewById(R.id.view_pager)
+
+    val tabLayout : TabLayout get() = findViewById(R.id.tabLayout)
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val recyclerView = findViewById<RecyclerView>(R.id.rv)
-        (application as PostsApplication).applicationComponent.inject(this)
-        postsViewModel = ViewModelProvider(this,postsViewModelFactory).get(PostsViewModel::class.java)
 
-        postsViewModel.postsLliveData.observe(this, Observer {
-            val postsAdapter = PostsAdapter(it)
-            recyclerView.adapter = postsAdapter
-            val linearLayoutManager : LinearLayoutManager = LinearLayoutManager(this@MainActivity)
-            recyclerView.layoutManager = linearLayoutManager
 
-        })
+       viewPager.adapter = PagerAdapter(supportFragmentManager)
+       tabLayout.setupWithViewPager(viewPager)
+       tabLayout.getTabAt(0)!!.setText(R.string.Articles);
+       tabLayout.getTabAt(1)!!.setText(R.string.locations);
+
+
     }
 }

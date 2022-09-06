@@ -1,5 +1,6 @@
 package com.example.myapplication.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,12 +22,19 @@ import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(),View.OnClickListener {
 
-    private var mailTxt : EditText? = null
-    private var passWordTxt : EditText? = null
     private lateinit var fireBaseLoginViewModel: FireBaseLoginViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+
+    val mailTxt: EditText
+    get() = findViewById(R.id.mail_txt)
+
+    val password_txt: EditText
+    get() = findViewById(R.id.password_txt)
+
+    val btnLogin: Button
+    get() = findViewById(R.id.btn_login)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,36 +43,25 @@ class LoginActivity : AppCompatActivity(),View.OnClickListener {
 
         (application as PostsApplication).applicationComponent.inject(this)
 
-        fireBaseLoginViewModel = ViewModelProvider(this,viewModelFactory).get(FireBaseLoginViewModel::class.java)
-        val btn : Button = findViewById(R.id.button)
-        mailTxt = findViewById(R.id.mail_txt)
-        passWordTxt = findViewById(R.id.password_txt)
-        btn.setOnClickListener(this)
-
-
-
-
+        fireBaseLoginViewModel =
+            ViewModelProvider(this, viewModelFactory).get(FireBaseLoginViewModel::class.java)
+        btnLogin.setOnClickListener(this)
 
     }
 
     override fun onClick(p0: View?) {
-        val mail : String = mailTxt!!.text.toString()
-        val passWord : String = passWordTxt!!.text.toString()
-        if (TextUtils.isEmpty(mail) || TextUtils.isEmpty(passWord)){
-           Toast.makeText(this@LoginActivity,"Some Fields Are Required..",Toast.LENGTH_LONG).show()
-        }else{
-            fireBaseLoginViewModel.setlogin(mail,passWord)
-            fireBaseLoginViewModel.firebaseUserLiveData.observe(this,Observer<Task<AuthResult>>{
-                if (it.isSuccessful){
-                    Toast.makeText(this@LoginActivity,"User Login Successfully",Toast.LENGTH_LONG).show()
-                    startActivity(Intent(this@LoginActivity,MainActivity::class.java))
-                }else{
-                    Toast.makeText(this@LoginActivity,it.exception!!.message,Toast.LENGTH_LONG).show()
-                }
-            })
-        }
+        val mail = mailTxt.text.toString()
+        val passWord = password_txt.text.toString()
 
-
-
+        fireBaseLoginViewModel.setlogin(mail, passWord)
+        fireBaseLoginViewModel.firebaseUserLiveData.observe(this, Observer<Task<AuthResult>> {
+            if (it.isSuccessful) {
+                Toast.makeText(this@LoginActivity, "User Login Successfully", Toast.LENGTH_LONG)
+                    .show()
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            } else {
+                Toast.makeText(this@LoginActivity, it.exception!!.message, Toast.LENGTH_LONG).show()
+            }
+        })
     }
 }
