@@ -11,6 +11,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.OnClick
 import com.example.myapplication.R
 import com.example.myapplication.application.PostsApplication
 import com.example.myapplication.viewmodel.FireBaseLoginViewModel
